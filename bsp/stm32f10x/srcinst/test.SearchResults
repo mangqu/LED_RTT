@@ -1,0 +1,7 @@
+---- rtgui_font_asc12 Matches (6 in 3 files) ----
+Asc12font.c (d:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\gui\src):struct rtgui_font rtgui_font_asc12 =
+Font.c (d:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\gui\src):extern struct rtgui_font rtgui_font_asc12;
+Font.c (d:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\gui\src):    rtgui_font_system_add_font(&rtgui_font_asc12);
+Rtgui_system.c (d:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\gui\src):extern struct rtgui_font rtgui_font_asc12;
+Rtgui_system.c (d:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\gui\src):    rtgui_font_set_defaut(&rtgui_font_asc12);
+Rtgui_system.c (d:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\gui\src):    rtgui_font_set_defaut(&rtgui_font_asc12);

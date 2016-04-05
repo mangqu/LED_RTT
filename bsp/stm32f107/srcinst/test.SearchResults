@@ -1,0 +1,8 @@
+---- RT_USING_SPI Matches (7 in 3 files) ----
+Platform.c (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\bsp\stm32f107\drivers):#ifdef RT_USING_SPI
+Platform.c (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\bsp\stm32f107\drivers):#endif /* RT_USING_SPI */
+Platform.c (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\bsp\stm32f107\drivers):#ifdef RT_USING_SPI
+Platform.c (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\bsp\stm32f107\drivers):#endif // RT_USING_SPI
+Rtconfig.h (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\bsp\stm32f107):#define RT_USING_SPI
+Rtdevice.h (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\drivers\include):#ifdef RT_USING_SPI
+Rtdevice.h (e:\study\rt_thread\rt-thread-master-2016-3-8\rt-thread-master\components\drivers\include):#endif /* RT_USING_SPI */
