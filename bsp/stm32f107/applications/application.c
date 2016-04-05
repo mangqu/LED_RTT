@@ -19,6 +19,7 @@
 
 #include <board.h>
 #include <rtthread.h>
+#include <tcpserver.h>
 
 #ifdef RT_USING_DFS
 #include <dfs_fs.h>
@@ -43,48 +44,50 @@ extern int lwip_system_init(void);
 void led_thread_entry(void* parameter)
 {
 	extern struct rt_device_led* led;
-	unsigned int count=0;
 
 	rt_hw_led_init();
 	
 	while (1)
 	{
-	    /* led1 on */
-#ifndef RT_USING_FINSH
-	    rt_kprintf("led on, count : %d\r\n",count);
-#endif
-	    count++;
-		led->ops->led_on(&(led->parent));
-	    rt_thread_delay( RT_TICK_PER_SECOND/2 ); /* sleep 0.5 second and switch to other thread */
-
-	    /* led1 off */
-#ifndef RT_USING_FINSH
-	    rt_kprintf("led off\r\n");
-#endif
-		led->ops->led_off(&(led->parent));
+		char cmd;
+		rt_mq_recv(tcp_mq, &cmd, sizeof(cmd), RT_WAITING_FOREVER);
+		switch (cmd)
+		{
+			//led1 on
+			case 17:
+				led->ops->led_on(1);
+				rt_kprintf("led1 on!\n");
+				break;
+			//led1 off
+			case 1:
+				led->ops->led_off(1);
+				rt_kprintf("led1 off!\n");
+				break;
+			//led2 on
+			case 34:
+				led->ops->led_on(2);
+				rt_kprintf("led2 on!\n");
+				break;
+			//led2 off
+			case 2:
+				led->ops->led_off(2);
+				rt_kprintf("led2 off!\n");
+				break;
+			//»ñÈ¡µÆµÄ×´Ì¬
+			case 255:
+				rt_kprintf("led1:1 led2:1\n");
+				break;
+			default:
+				break;
+		}
 	    rt_thread_delay( RT_TICK_PER_SECOND/2 );
 	}
 	
 }
 
-void key_thread_entry(void* parameter)
-{
-	extern struct rt_device_key* key;
-
-	rt_hw_key_init();
-
-	while (1)
-	{
-		rt_thread_delay(10);
-	}
-}
-
 void rt_init_thread_entry(void* parameter)
 {
-    {
-        extern void rt_platform_init(void);
-       rt_platform_init();
-    }
+	rt_platform_init();
 
     /* Filesystem Initialization */
 #if defined(RT_USING_DFS) && defined(RT_USING_DFS_ELMFAT)
@@ -93,16 +96,16 @@ void rt_init_thread_entry(void* parameter)
 
 	/* initialize the elm chan FatFS file system*/
 	elm_init();
-    
-    /* mount sd card fat partition 1 as root directory */
-    if (dfs_mount("sd0", "/", "elm", 0, 0) == 0)
-    {
-        rt_kprintf("File System initialized!\n");
-    }
-    else
-    {
-        rt_kprintf("File System initialzation failed!\n");
-    }
+
+	/* mount sd card fat partition 1 as root directory */
+	if (dfs_mount("sd0", "/", "elm", 0, 0) == 0)
+	{
+	    rt_kprintf("File System initialized!\n");
+	}
+	else
+	{
+	    rt_kprintf("File System initialzation failed!\n");
+	}
 #endif /* RT_USING_DFS && RT_USING_DFS_ELMFAT */
 
 #ifdef RT_USING_LWIP
@@ -115,7 +118,7 @@ void rt_init_thread_entry(void* parameter)
 	rt_kprintf("TCP/IP initialized!\n");
 
 //	telnet_srv();
-//	tcpserv();
+	tcpserv();
 //	tcpclient("172.24.120.222", 8000);
 //	udpserv();
 //	udpclient("172.24.120.228", 8080, 10);
@@ -137,7 +140,8 @@ void rt_init_thread_entry(void* parameter)
 int rt_application_init(void)
 {
 	rt_thread_t tid;
-/*	tid = rt_thread_create("led", 
+	
+	tid = rt_thread_create("led", 
 		led_thread_entry, RT_NULL, 
 		1024, 20, 10);
 	if (tid != RT_NULL)
@@ -145,14 +149,6 @@ int rt_application_init(void)
 		rt_thread_startup(tid);
 	}
 
-	tid = rt_thread_create("key", 
-		key_thread_entry, RT_NULL, 
-		1024, 24, 20);
-	if (tid != RT_NULL)
-	{
-		rt_thread_startup(tid);
-	}
-*/
 	tid = rt_thread_create("init",
 	    rt_init_thread_entry, RT_NULL,
 	    2048, RT_THREAD_PRIORITY_MAX/3, 20);

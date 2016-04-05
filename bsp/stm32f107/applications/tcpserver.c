@@ -1,9 +1,12 @@
 #include <rtthread.h>
 #include <lwip/sockets.h>
+#include <tcpserver.h>
 
 static const char send_data[] = "This is TCP Server from RT-Thread.";
 
-void tcpserv(void *parameter)
+rt_mq_t tcp_mq;
+
+void tcpserv()
 {
 	char *recv_data; 
 	rt_uint32_t sin_size;
@@ -11,7 +14,7 @@ void tcpserv(void *parameter)
 	struct sockaddr_in server_addr, client_addr;
 	rt_bool_t stop = RT_FALSE;
 
-	recv_data = rt_malloc(1024);
+	recv_data = rt_malloc(1);
 	if (recv_data == RT_NULL)
 	{
 	    rt_kprintf("No memory\n");
@@ -49,6 +52,7 @@ void tcpserv(void *parameter)
 	}
 
 	rt_kprintf("\nTCPServer Waiting for client on port 5000...\n");
+	tcp_mq = rt_mq_create("cmd", 1, sizeof(tcp_cmd_t), RT_IPC_FLAG_FIFO);
 	while (stop != RT_TRUE)
 	{
 		sin_size = sizeof(struct sockaddr_in);
@@ -61,41 +65,14 @@ void tcpserv(void *parameter)
 
 		while (1)
 		{
-			bytes_received = recv(connected, recv_data, 1024, 0);
+			bytes_received = recv(connected, recv_data, 1, 0);
 			if (bytes_received <= 0)
 			{
 			    lwip_close(connected);
 			    break;
 			}
-			
-			recv_data[bytes_received] = '\0';
-			if (strcmp(recv_data , "q") == 0 || strcmp(recv_data , "Q") == 0)
-			{
-			    lwip_close(connected);
-			    break;
-			}
-			else if (strcmp(recv_data, "exit") == 0)
-			{
-			    lwip_close(connected);
-			    stop = RT_TRUE;
-			    break;
-			}
-			else
-			{
-				//TODO
-				switch (recv_data[0])
-				{
-					case '1':
-						send(connected, "zhangzhen", strlen("zhangzhen"), 0);
-						break;
-					case '2':
-						send(connected, "chendaxia", strlen("chendaxia"), 0);
-						break;
-					default:
-						send(connected, "error", strlen("error"), 0);
-						break;
-				}
-			}
+
+			rt_mq_send(tcp_mq, recv_data, 1);
 		}
 	}
 

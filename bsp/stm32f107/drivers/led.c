@@ -31,10 +31,10 @@ void led_on(uint8_t num)
 	switch (num)
 	{
 		case 1:
-			GPIO_SetBits(led1_gpio, led1_pin);
+			GPIO_ResetBits(led1_gpio, led1_pin);
 			break;
 		case 2:
-			GPIO_SetBits(led2_gpio, led2_pin);
+			GPIO_ResetBits(led2_gpio, led2_pin);
 			break;
 		default:
 			break;
@@ -46,10 +46,10 @@ void led_off(uint8_t num)
 	switch (num)
 	{
 		case 1:
-			GPIO_ResetBits(led1_gpio, led1_pin);
+			GPIO_SetBits(led1_gpio, led1_pin);
 			break;
 		case 2:
-			GPIO_ResetBits(led2_gpio, led2_pin);
+			GPIO_SetBits(led2_gpio, led2_pin);
 			break;
 		default:
 			break;
@@ -61,7 +61,6 @@ const static struct rt_led_ops _stm32_led_ops =
 	led_on,
 	led_off,
 };
-
 
 void rt_hw_led_init(void)
 {

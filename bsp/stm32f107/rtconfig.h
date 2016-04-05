@@ -81,14 +81,14 @@
 // </section>
 
 /* SECTION: finsh, a C-Express shell */
-#define RT_USING_FINSH
+//#define RT_USING_FINSH
 /* Using symbol table */
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 
 /* SECTION: device filesystem */
-#define RT_USING_DFS
-#define RT_USING_DFS_ELMFAT
+//#define RT_USING_DFS
+//#define RT_USING_DFS_ELMFAT
 /* Reentrancy (thread safe) of the FatFs module.  */
 #define RT_DFS_ELM_REENTRANT
 /* Number of volumes (logical drives) to be used. */

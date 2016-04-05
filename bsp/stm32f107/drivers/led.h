@@ -25,8 +25,8 @@ struct rt_device_led
 
 struct rt_led_ops
 {
-	void (*led_on)();
-	void (*led_off)();
+	void (*led_on)(uint8_t );
+	void (*led_off)(uint8_t );
 };
 
 void rt_hw_led_init(void);
